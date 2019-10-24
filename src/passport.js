@@ -15,7 +15,7 @@ passport.use(
 		{
 			clientID: process.env.GH_ID,
 			clientSecret: process.env.GH_SECRET,
-			callbackURL: `http://wetubenew.herokuapp.com${routes.githubCallback}`
+			callbackURL: `https://wetubenew.herokuapp.com${routes.githubCallback}`
 		},
 		githubLoginCallback
 	)
