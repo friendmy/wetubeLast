@@ -8,13 +8,33 @@ const increaseNumber = () => {
   commentNumber.innerHTML = parseInt(commentNumber.innerHTML, 10) + 1;
 };
 
-const addComment = comment => {
+const addComment = (comment, commentID) => {
   const li = document.createElement("li");
   const span = document.createElement("span");
+	const button = document.createElement("button");
+	button.className = "jsDeleteComment";
+	button.value = commentID;
+	button.innerText = "X";
+	span.style.paddingRight = "10px";
+	button.addEventListener("click", deleteComment);
   span.innerHTML = comment;
+	span.appendChild(button);
+	li.id = commentID;
   li.appendChild(span);
   commentList.prepend(li);
   increaseNumber();
+};
+
+const deleteComment = async event => {
+	const commentID = event.target.value;
+
+	const response = await axios({
+		url: `/api/${commentID}/deleteComment`,
+		method: "POST"
+	});
+	if (response.status === 200) {
+		document.getElementById(`${commentID}`).remove();
+	}
 };
 
 const sendComment = async comment => {
@@ -27,7 +47,8 @@ const sendComment = async comment => {
     }
   });
   if (response.status === 200) {
-    addComment(comment);
+		const { commentId } = response.data;
+		addComment(comment, commentId);
   }
 };
 
@@ -38,9 +59,14 @@ const handleSubmit = event => {
   sendComment(comment);
   commentInput.value = "";
 };
-
 function init() {
   addCommentForm.addEventListener("submit", handleSubmit);
+
+	const deleteButtonList = document.querySelectorAll(".jsDeleteComment");
+
+	for (let index = 0; index < deleteButtonList.length; index++) {
+		deleteButtonList[index].addEventListener("click", deleteComment);
+	}
 }
 
 if (addCommentForm) {

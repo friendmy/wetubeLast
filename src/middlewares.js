@@ -6,23 +6,27 @@ import routes from "./routes";
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_KEY,
   secretAccessKey: process.env.AWS_PRIVATE_KEY,
-  region: "ap-northeast-1"
+	region: "ap-northeast-2"
 });
 
 const multerVideo = multer({
   storage: multerS3({
     s3,
     acl: "public-read",
-    bucket: "wetube/video"
+		bucket: "wetubenew/video"
   })
 });
+
 const multerAvatar = multer({
   storage: multerS3({
     s3,
     acl: "public-read",
-    bucket: "wetube/avatar"
+		bucket: "wetubenew/avatar"
   })
 });
+
+// const multerVideo = multer({ dest: "uploads/videos/" });
+// const multerAvatar = multer({ dest: "uploads/avatars/" });
 
 export const uploadVideo = multerVideo.single("videoFile");
 export const uploadAvatar = multerAvatar.single("avatar");
